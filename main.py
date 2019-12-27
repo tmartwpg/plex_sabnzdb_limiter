@@ -22,6 +22,15 @@ tautulli_api_url = f"http://URL/api/v2?apikey=API_KEY&cmd=get_activity"
 
 
 def get_args():
+    global tautulli_api_url
+    global sabznzdb_api_url
+    global sabznzdb_api_url_set_speed
+    global sabznzdb_api_url_get_queue
+    global sabznzdb_api_url_get_config
+    global debug_on
+    global dry_run
+    global leave_unused_line_speed
+
     parser = argparse.ArgumentParser(description='Process some input.')
 
     parser.add_argument('--tautulli_url', required=True, help='Pass the url for your Tautulli server')
@@ -34,15 +43,6 @@ def get_args():
 
     args = parser.parse_args()
 
-
-    global tautulli_api_url
-    global sabznzdb_api_url
-    global sabznzdb_api_url_set_speed
-    global sabznzdb_api_url_get_queue
-    global sabznzdb_api_url_get_config
-    global debug_on
-    global dry_run
-    global leave_unused_line_speed
 
     tautulli_api_url = f"http://{args.tautulli_url}/api/v2?apikey={args.tautulli_api_key}&cmd=get_activity"
     sabznzdb_api_url = f"http://{args.sabnzdb_url}/sabnzbd/api?output=json&apikey={args.sabnzdb_api_key}"
@@ -109,7 +109,7 @@ def set_sabnzdb_speed(key='30'):
         debug(f"Set speed to {int(key/1024)}KB: {status}")
     else:
         debug(f"Would have set the speed to {int(key/1024)}KB")
-        
+
 def get_tautulli():
     ret_val = {}
     r = requests.get(tautulli_api_url)
@@ -127,8 +127,16 @@ if __name__ == '__main__':
     response = get_tautulli()
     config = get_sabnzdb_config()
 
-    new_speed = (int(sabznzdb_max_line_speed) - int(response['wan_bandwidth']) - int(leave_unused_line_speed))*1024
-    set_sabnzdb_speed(key=new_speed)
+    queue = get_sabnzdb_queue()
+    current_speed = int(float(queue['speedlimit_abs'])/1024)
 
+    new_speed = (int(sabznzdb_max_line_speed) - int(response['wan_bandwidth']) - int(leave_unused_line_speed))*1024
+
+    if not current_speed == int(new_speed/1024):
+        set_sabnzdb_speed(key=new_speed)
+    else:
+        debug("Speeds are the same, not changing")
+
+    
     debug("Finished Successfully")
     exit(0)
