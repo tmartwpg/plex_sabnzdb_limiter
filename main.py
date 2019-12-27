@@ -124,13 +124,13 @@ def get_tautulli():
 if __name__ == '__main__':
     args = get_args()
 
-    response = get_tautulli()
+    tautulli = get_tautulli()
     config = get_sabnzdb_config()
 
     queue = get_sabnzdb_queue()
     current_speed = int(float(queue['speedlimit_abs'])/1024)
 
-    new_speed = (int(sabznzdb_max_line_speed) - int(response['wan_bandwidth']) - int(leave_unused_line_speed))*1024
+    new_speed = (int(sabznzdb_max_line_speed) - int(tautulli['wan_bandwidth']) - int(leave_unused_line_speed))*1024
 
     if not current_speed == int(new_speed/1024):
         set_sabnzdb_speed(key=new_speed)

@@ -16,3 +16,19 @@ main.py [-h] \
 	[--leave_unused_line_speed LEAVE_UNUSED_LINE_SPEED] \
 	[--debug] \
 	[--dry_run]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --tautulli_url TAUTULLI_URL
+                        Pass the url for your Tautulli server
+  --sabnzdb_url SABNZDB_URL
+                        Pass the url for your SABnzdb server
+  --tautulli_api_key TAUTULLI_API_KEY
+                        Pass the api_key for your Tautulli server
+  --sabnzdb_api_key SABNZDB_API_KEY
+                        Pass the api_key for your SABnzdb server
+  --leave_unused_line_speed LEAVE_UNUSED_LINE_SPEED
+                        Leave some internet for other things (KB)
+  --dry_run             Don't actually change the speed
+  --debug, -d           Turn on debugging messages
+  ```
